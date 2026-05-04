@@ -1,5 +1,24 @@
 all: html pdf
 
+# Screenshot automation
+# ---------------------
+# Prerequisites: Node.js >=20, Docker (for the Nextcloud stable33 container)
+# Optional:      pngquant (for automatic PNG compression after sync)
+
+screenshot-inventory:
+	python3 scripts/inventory.py
+
+screenshots: screenshot-inventory
+	npm run screenshots
+	bash scripts/sync.sh
+
+screenshots-dry: screenshot-inventory
+	npm run screenshots
+	bash scripts/sync.sh --dry-run
+
+screenshot-install:
+	npm install
+
 html: admin-manual-html user-manual-html developer-manual-html
 pdf: admin-manual-pdf user-manual-pdf
 

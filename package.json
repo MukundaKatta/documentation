@@ -1,0 +1,20 @@
+{
+  "name": "nextcloud-documentation-screenshots",
+  "private": true,
+  "description": "Screenshot automation for Nextcloud documentation",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "screenshots": "cypress run --e2e",
+    "screenshots:open": "cypress open --e2e",
+    "inventory": "python3 scripts/inventory.py"
+  },
+  "devDependencies": {
+    "@nextcloud/cypress": "^1.1.0",
+    "@types/node": "^22.0.0",
+    "cypress": "^14.0.0",
+    "typescript": "^5.0.0"
+  }
+}
