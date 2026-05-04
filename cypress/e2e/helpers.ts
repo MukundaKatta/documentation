@@ -10,7 +10,18 @@
  * The sync script (scripts/sync.sh) reads screenshot-inventory.json to map
  * these names to their RST image directive targets.
  */
+/** Inject CSS to strip focus outlines before capturing. */
+function suppressFocusRings(): void {
+	cy.document().then((doc) => {
+		const style = doc.createElement('style')
+		style.setAttribute('data-doc-screenshot', '')
+		style.textContent = '*:focus, *:focus-visible { outline: none !important; }'
+		doc.head.appendChild(style)
+	})
+}
+
 export function docScreenshot(name: string, options: Partial<Cypress.ScreenshotOptions> = {}): void {
+	suppressFocusRings()
 	// Let animations, loaders, and toasts settle before capturing
 	cy.wait(500)
 	cy.screenshot(name, {
@@ -29,6 +40,7 @@ export function docElementScreenshot(
 	name: string,
 	options: Partial<Cypress.ScreenshotOptions> = {},
 ): void {
+	suppressFocusRings()
 	cy.wait(500)
 	cy.get(selector).should('be.visible').screenshot(name, {
 		overwrite: true,

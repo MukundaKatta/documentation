@@ -11,6 +11,13 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 
 	before(() => {
 		cy.login(admin)
+		// Create a Documents folder so the breadcrumb screenshot has something to show
+		cy.request({
+			method: 'MKCOL',
+			url: '/remote.php/dav/files/admin/Documents',
+			auth: { user: 'admin', pass: 'admin' },
+			failOnStatusCode: false, // 405 if it already exists — that's fine
+		})
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
 	})
@@ -137,6 +144,9 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 		cy.get('[role="tabpanel"]').should('be.visible')
 		cy.get('button[aria-label="Create a new share link"]').click()
 		cy.get('.sharing-entry.sharing-entry--share').should('be.visible')
+		// Dismiss toasts so they don't overlap the sharing panel
+		cy.get('button.toast-close').click({ multiple: true, force: true })
+		cy.get('.toastify').should('not.exist')
 		docScreenshot('user/sharing_public_file')
 	})
 
