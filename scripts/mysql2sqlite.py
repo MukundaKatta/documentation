@@ -156,6 +156,11 @@ def process_create_table(block: str) -> list[str]:
             # Remove MySQL-only column modifiers SQLite doesn't understand
             col_rest = re.sub(r'\s*\bAUTO_INCREMENT\b\s*', ' ', col_rest, flags=re.I)
             col_rest = re.sub(r"\s+COMMENT\s+'(?:[^'\\]|\\.)*'", '', col_rest, flags=re.I)
+            # Strip inline CHECK constraints — MariaDB adds CHECK (json_valid(...)) for
+            # JSON columns. SQLite 3.38+ evaluates json_valid(NULL)=0 which causes every
+            # INSERT that omits the column to fail the constraint check.
+            # CHECK is always last in a MySQL column definition, so strip to end-of-string.
+            col_rest = re.sub(r'\s+CHECK\s*\(.*', '', col_rest, flags=re.I | re.DOTALL)
             col_rest = col_rest.strip()
 
             # Map types

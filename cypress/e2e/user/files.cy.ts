@@ -133,10 +133,20 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	})
 
 	it('Files — public link share (sharing_public_file)', () => {
-		cy.visit('/apps/files')
+		cy.visit('/apps/files/files?dir=/')
 		cy.get('[data-cy-files-list]').should('be.visible')
+		// NC's router may restore a previous sidebar state. Close it first so
+		// "Details" is available in the Actions menu.
+		cy.get('[data-cy-sidebar]').then($sidebar => {
+			if ($sidebar.is(':visible')) {
+				cy.get('body').type('{esc}')
+				cy.get('[data-cy-sidebar]').should('not.be.visible')
+			}
+		})
 		cy.get('[data-cy-files-list-row]').first()
-			.find('button[aria-label="Actions"]').click({ force: true })
+			.find('button[aria-label="Actions"]')
+			.should('be.visible')
+			.click()
 		cy.get('[data-cy-files-list-row-action="details"]').first()
 			.click()
 		cy.get('[data-cy-sidebar]').should('be.visible')
