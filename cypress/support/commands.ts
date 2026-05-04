@@ -3,4 +3,4 @@
 
 // Custom commands for documentation screenshots.
 // @nextcloud/cypress commands (cy.login, cy.createRandomUser, etc.) are
-// loaded via e2e.ts → '@nextcloud/cypress/support'.
+// registered via addCommands() in e2e.ts.

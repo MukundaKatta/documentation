@@ -12,9 +12,9 @@
     "inventory": "python3 scripts/inventory.py"
   },
   "devDependencies": {
-    "@nextcloud/cypress": "^1.1.0",
-    "@types/node": "^22.0.0",
-    "cypress": "^14.0.0",
+    "@nextcloud/cypress": "1.0.0-beta.15",
+    "@types/node": "^20.0.0",
+    "cypress": "^13.9.0",
     "typescript": "^5.0.0"
   }
 }
