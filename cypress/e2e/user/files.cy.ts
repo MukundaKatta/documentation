@@ -74,9 +74,9 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	it('Files — file row with actions menu (files_page-3)', () => {
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
-		// Hover to reveal inline actions
-		cy.get('[data-cy-files-list-row]').first().trigger('mouseover')
-		cy.get('[data-cy-files-list-row-actions]').first().should('be.visible')
+		cy.get('[data-cy-files-list-row]').first()
+			.find('button[aria-label="Actions"]').click()
+		cy.get('[data-cy-files-list-row-action]').first().should('be.visible')
 		docScreenshot('user/files_page-3')
 	})
 
