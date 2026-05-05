@@ -15,24 +15,26 @@ const FIXTURES_PDFS = 'cypress/fixtures/pdfs'
 
 function provisionFiles() {
 	const mkdir = (p: string) => cy.task('mkdavCol', { dest: p, user: 'christine', password: 'christine' })
-	const upload = (src: string, dest: string) =>
-		cy.task('uploadFile', { src, dest, user: 'christine', password: 'christine' })
+	// Unix timestamps for realistic modification dates
+	const d = (isoDate: string) => Math.floor(new Date(isoDate).getTime() / 1000)
+	const upload = (src: string, dest: string, mtime: number) =>
+		cy.task('uploadFile', { src, dest, user: 'christine', password: 'christine', mtime })
 
 	mkdir('Documents')
 	mkdir('Photos')
 
 	// Photos folder
-	upload(`${WALLPAPERS}/forest-green.jpg`,     'Photos/Forest.jpg')
-	upload(`${WALLPAPERS}/milky-way.jpg`,         'Photos/Milky Way.jpg')
-	upload(`${WALLPAPERS}/city-night-purple.jpg`, 'Photos/City at night.jpg')
+	upload(`${WALLPAPERS}/forest-green.jpg`,     'Photos/Forest.jpg',        d('2026-03-15'))
+	upload(`${WALLPAPERS}/milky-way.jpg`,         'Photos/Milky Way.jpg',     d('2026-02-08'))
+	upload(`${WALLPAPERS}/city-night-purple.jpg`, 'Photos/City at night.jpg', d('2026-01-22'))
 
-	// Images in root — show variety in the main file list
-	upload(`${WALLPAPERS}/ocean-golden.jpg`,   'Ocean sunset.jpg')
-	upload(`${WALLPAPERS}/snowy-mountain.jpg`, 'Snowy mountain.jpg')
+	// Images in root
+	upload(`${WALLPAPERS}/ocean-golden.jpg`,   'Ocean sunset.jpg',   d('2026-04-10'))
+	upload(`${WALLPAPERS}/snowy-mountain.jpg`, 'Snowy mountain.jpg', d('2025-12-28'))
 
 	// PDFs
-	upload(`${FIXTURES_PDFS}/Q2 Project Proposal.pdf`, 'Q2 Project Proposal.pdf')
-	upload(`${FIXTURES_PDFS}/Team Meeting Notes.pdf`,   'Documents/Team Meeting Notes.pdf')
+	upload(`${FIXTURES_PDFS}/Q2 Project Proposal.pdf`, 'Q2 Project Proposal.pdf',           d('2026-04-14'))
+	upload(`${FIXTURES_PDFS}/Team Meeting Notes.pdf`,   'Documents/Team Meeting Notes.pdf',  d('2026-04-28'))
 }
 
 describe('Documentation screenshots — Files', { testIsolation: false }, () => {

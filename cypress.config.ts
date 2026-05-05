@@ -69,15 +69,13 @@ export default defineConfig({
 
 				// Upload a local file to WebDAV in Node.js to avoid Cypress IPC
 				// serialising Buffer objects as JSON (which breaks binary bodies).
-				async uploadFile({ src, dest, user, password }: { src: string, dest: string, user: string, password: string }) {
+				async uploadFile({ src, dest, user, password, mtime }: { src: string, dest: string, user: string, password: string, mtime?: number }) {
 					const content = readFileSync(src)
 					const credentials = Buffer.from(`${user}:${password}`).toString('base64')
 					const url = `http://localhost:${SCREENSHOT_PORT}/remote.php/dav/files/${user}/${dest}`
-					const res = await fetch(url, {
-						method: 'PUT',
-						headers: { Authorization: `Basic ${credentials}` },
-						body: content,
-					})
+					const headers: Record<string, string> = { Authorization: `Basic ${credentials}` }
+					if (mtime) headers['X-OC-MTime'] = String(mtime)
+					const res = await fetch(url, { method: 'PUT', headers, body: content })
 					return res.status
 				},
 
