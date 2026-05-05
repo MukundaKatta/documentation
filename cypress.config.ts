@@ -30,6 +30,7 @@ const SCREENSHOT_APPS = [
 	'files_versions',
 	'notes',
 	'notifications',
+	'spreed',
 	'tasks',
 	'viewer',
 ]
