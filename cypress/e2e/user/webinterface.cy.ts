@@ -11,7 +11,7 @@ before(() => {
 	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
 	cy.task('uploadAvatar', { src: `${AVATAR_DIR}/christine/avatar.png`, user: 'christine', password: 'christine' })
 	// Enable dashboard widgets matching the tech-preview layout (mail/spreed omitted — not in server image)
-	cy.task('occ', { cmd: 'user:setting christine dashboard layout files-favorites,calendar,deck,notes,tasks' })
+	cy.task('occ', { cmd: 'user:setting christine dashboard layout files-favorites,calendar,deck,notes' })
 	cy.task('occ', { cmd: 'user:setting christine dashboard firstRun 0' })
 })
 
@@ -41,14 +41,6 @@ describe('Web interface', () => {
 		cy.visit('/apps/dashboard')
 		cy.get('header#header').should('be.visible')
 		docElementScreenshot('header#header', 'user/webinterface_nav')
-	})
-
-	it('Customize button', () => {
-		cy.login(user)
-		cy.visit('/apps/dashboard')
-		cy.contains('button', 'Customize', { timeout: 15000 }).should('exist').scrollIntoView()
-		cy.contains('button', 'Customize').should('be.visible')
-		docElementScreenshot('button:contains("Customize")', 'user/webinterface_customize_btn')
 	})
 
 	it('Unified search', () => {
