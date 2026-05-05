@@ -90,15 +90,16 @@ export default defineConfig({
 				},
 			})
 
-			on('after:run', () => {
+			on('after:run', async () => {
 				try {
+					const { default: pngquantBin } = await import('pngquant-bin')
 					execSync(
 						`find "${process.env.HOME}/Pictures/Screenshots/nextcloud-docs" -name '*.png'` +
-						` -exec pngquant --quality=70-85 --force --ext .png --strip {} \\;`,
+						` -exec "${pngquantBin}" --quality=70-85 --force --ext .png --strip {} \\;`,
 						{ stdio: 'inherit' },
 					)
 				} catch {
-					console.warn('pngquant not found or failed — screenshots not compressed')
+					console.warn('pngquant failed — screenshots not compressed')
 				}
 				stopNextcloud()
 			})
