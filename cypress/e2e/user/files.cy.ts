@@ -143,6 +143,17 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 		docScreenshot('user/file_menu_comments_2')
 	})
 
+	it('Files — selecting multiple files (files_page-9)', () => {
+		cy.visit('/apps/files')
+		cy.get('[data-cy-files-list]').should('be.visible')
+		// Select the first three rows
+		cy.get('[data-cy-files-list-row]').eq(0).find('[data-cy-files-list-row-checkbox]').click()
+		cy.get('[data-cy-files-list-row]').eq(1).find('[data-cy-files-list-row-checkbox]').click()
+		cy.get('[data-cy-files-list-row]').eq(2).find('[data-cy-files-list-row-checkbox]').click()
+		cy.get('[data-cy-files-list-selection-actions]').should('be.visible')
+		docScreenshot('user/files_page-9')
+	})
+
 	// -------------------------------------------------------------------------
 	// sharing.rst
 	// -------------------------------------------------------------------------
