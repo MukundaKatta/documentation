@@ -91,6 +91,15 @@ export default defineConfig({
 			})
 
 			on('after:run', () => {
+				try {
+					execSync(
+						`find "${process.env.HOME}/Pictures/Screenshots/nextcloud-docs" -name '*.png'` +
+						` -exec pngquant --quality=70-85 --force --ext .png --strip {} \\;`,
+						{ stdio: 'inherit' },
+					)
+				} catch {
+					console.warn('pngquant not found or failed — screenshots not compressed')
+				}
 				stopNextcloud()
 			})
 
