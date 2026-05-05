@@ -45,6 +45,24 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	before(() => {
 		provisionUser()
 		provisionFiles()
+		// Share Documents folder with admin (user share → shows Shared badge)
+		cy.request({
+			method: 'POST',
+			url: '/ocs/v2.php/apps/files_sharing/api/v1/shares',
+			auth: { user: 'christine', pass: 'christine' },
+			headers: { 'OCS-APIRequest': 'true' },
+			body: { path: '/Documents', shareType: 0, shareWith: 'admin' },
+			form: true,
+		})
+		// Share Ocean sunset.jpg via public link (shareType 3 → shows chain-link icon)
+		cy.request({
+			method: 'POST',
+			url: '/ocs/v2.php/apps/files_sharing/api/v1/shares',
+			auth: { user: 'christine', pass: 'christine' },
+			headers: { 'OCS-APIRequest': 'true' },
+			body: { path: '/Ocean sunset.jpg', shareType: 3 },
+			form: true,
+		})
 		cy.login(user)
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
@@ -152,6 +170,14 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 		cy.get('[data-cy-files-list-row]').eq(2).find('[data-cy-files-list-row-checkbox]').click()
 		cy.get('[data-cy-files-list-selection-actions]').should('be.visible')
 		docScreenshot('user/files_page-9')
+	})
+
+	it('Files — sharing status icons (files_sharing_status)', () => {
+		cy.visit('/apps/files')
+		cy.get('[data-cy-files-list]').should('be.visible')
+		// Wait for share badges to render (Documents = user share, Ocean sunset.jpg = public link)
+		cy.get('[data-cy-files-list-row][data-cy-files-list-row-name="Documents"] [class*="share"], [data-cy-files-list-row][data-cy-files-list-row-name="Ocean sunset.jpg"] [class*="share"]').should('exist')
+		docScreenshot('user/files_sharing_status')
 	})
 
 	// -------------------------------------------------------------------------
