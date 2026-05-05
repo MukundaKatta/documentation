@@ -116,9 +116,10 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	it('Files — grid view (files_page-8)', () => {
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
-		// Grid view toggle button
 		cy.get('.files-list__header-grid-button').click()
 		cy.get('.files-list--grid, [class*="grid"]').should('exist')
+		// Move focus away so the button outline doesn't appear in the screenshot
+		cy.get('[data-cy-files-list]').click({ force: true })
 		docScreenshot('user/files_page-8')
 		// Reset to list view so subsequent tests don't inherit grid mode
 		cy.get('.files-list__header-grid-button').click()
