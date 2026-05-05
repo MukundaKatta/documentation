@@ -25,21 +25,19 @@ function occ(cmd: string, env: Record<string, string> = {}): string {
 const SCREENSHOT_APPS = [
 	'activity',
 	'calendar',
-	'circles',
 	'comments',
 	'deck',
 	'files_versions',
 	'notes',
 	'notifications',
-	'photos',
 	'tasks',
 	'viewer',
 ]
 
 export default defineConfig({
-	// 16:9, matches most documentation screenshot widths
-	viewportWidth: 1280,
-	viewportHeight: 720,
+	// 16:10, common laptop resolution — enough height for dashboard widgets + Customise button
+	viewportWidth: 1440,
+	viewportHeight: 900,
 
 	requestTimeout: 20000,
 	defaultCommandTimeout: 10000,
@@ -67,6 +65,10 @@ export default defineConfig({
 				}
 				if (browser.name === 'electron') {
 					launchOptions.preferences.spellcheck = false
+					// Set the Electron window size — viewportWidth/Height alone isn't
+					// respected in headless Electron; the BrowserWindow must be sized explicitly.
+					launchOptions.preferences.width = 1440
+					launchOptions.preferences.height = 900
 					return launchOptions
 				}
 			})

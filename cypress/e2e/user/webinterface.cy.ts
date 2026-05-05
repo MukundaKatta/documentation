@@ -11,11 +11,15 @@ before(() => {
 	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
 	cy.task('uploadAvatar', { src: `${AVATAR_DIR}/christine/avatar.png`, user: 'christine', password: 'christine' })
 	// Enable dashboard widgets matching the tech-preview layout (mail/spreed omitted — not in server image)
-	cy.task('occ', { cmd: 'user:setting christine dashboard layout files-favorites,calendar,deck,notes,tasks,photos-onthisday,circles' })
+	cy.task('occ', { cmd: 'user:setting christine dashboard layout files-favorites,calendar,deck,notes,tasks' })
 	cy.task('occ', { cmd: 'user:setting christine dashboard firstRun 0' })
 })
 
 describe('Web interface', () => {
+	beforeEach(() => {
+		cy.viewport(1440, 900)
+	})
+
 	it('Login page', () => {
 		cy.logout()
 		cy.visit('/')
@@ -43,7 +47,6 @@ describe('Web interface', () => {
 		cy.login(user)
 		cy.visit('/apps/dashboard')
 		cy.get('header#header').should('be.visible')
-		// Click the profile/settings button (rightmost item in the header)
 		cy.get('#settings button, #user-menu button, header .user-status__status button, .user-status-menu-item button').first().click()
 		cy.contains('Log out').should('be.visible')
 		docScreenshot('user/webinterface_profile_menu')
