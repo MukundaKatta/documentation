@@ -43,7 +43,7 @@ export default defineConfig({
 
 	video: false,
 
-	screenshotsFolder: 'cypress/snapshots',
+	screenshotsFolder: `${process.env.HOME}/Pictures/Screenshots/nextcloud-docs`,
 	trashAssetsBeforeRuns: true,
 
 	e2e: {
