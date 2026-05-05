@@ -5,25 +5,34 @@ import { User } from '@nextcloud/cypress'
 import { docScreenshot, docElementScreenshot } from '../helpers'
 
 const user = new User('christine', 'christine')
-const userAuth = { user: 'christine', pass: 'christine' }
 
 function provisionUser() {
 	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
 }
 
+const WALLPAPERS = '/home/anna/Downloads/wallpapers'
+const FIXTURES_PDFS = 'cypress/fixtures/pdfs'
+
 function provisionFiles() {
-	const base = '/remote.php/dav/files/christine'
-	const mkdir = (p: string) => cy.request({ method: 'MKCOL', url: `${base}/${p}`, auth: userAuth, failOnStatusCode: false })
-	const touch = (p: string) => cy.request({ method: 'PUT', url: `${base}/${p}`, auth: userAuth, body: '', failOnStatusCode: false })
+	const mkdir = (p: string) => cy.task('mkdavCol', { dest: p, user: 'christine', password: 'christine' })
+	const upload = (src: string, dest: string) =>
+		cy.task('uploadFile', { src, dest, user: 'christine', password: 'christine' })
 
 	mkdir('Documents')
 	mkdir('Photos')
-	touch('Company letter template.docx')
-	touch('Documents/Meeting notes.md')
-	touch('Example Spreadsheet.ods')
-	touch('Landscape.jpeg')
-	touch('Nextcloud Manual.pdf')
-	touch('Readme.md')
+
+	// Photos folder
+	upload(`${WALLPAPERS}/forest-green.jpg`,     'Photos/Forest.jpg')
+	upload(`${WALLPAPERS}/milky-way.jpg`,         'Photos/Milky Way.jpg')
+	upload(`${WALLPAPERS}/city-night-purple.jpg`, 'Photos/City at night.jpg')
+
+	// Images in root — show variety in the main file list
+	upload(`${WALLPAPERS}/ocean-golden.jpg`,   'Ocean sunset.jpg')
+	upload(`${WALLPAPERS}/snowy-mountain.jpg`, 'Snowy mountain.jpg')
+
+	// PDFs
+	upload(`${FIXTURES_PDFS}/Q2 Project Proposal.pdf`, 'Q2 Project Proposal.pdf')
+	upload(`${FIXTURES_PDFS}/Team Meeting Notes.pdf`,   'Documents/Team Meeting Notes.pdf')
 }
 
 describe('Documentation screenshots — Files', { testIsolation: false }, () => {

@@ -68,3 +68,4 @@ cypress/snapshots/
 cypress/videos/
 cypress/downloads/
 screenshot-inventory.json
+cypress/fixtures/pdfs/

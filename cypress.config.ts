@@ -6,6 +6,7 @@ import {
 } from '@nextcloud/cypress/docker'
 import { defineConfig } from 'cypress'
 import { execSync } from 'child_process'
+import { readFileSync } from 'fs'
 import * as path from 'path'
 
 // Port exposed to the host for the screenshot container.
@@ -65,6 +66,30 @@ export default defineConfig({
 
 			on('task', {
 				occ: ({ cmd, env = {} }: { cmd: string, env?: Record<string, string> }) => occ(cmd, env),
+
+				// Upload a local file to WebDAV in Node.js to avoid Cypress IPC
+				// serialising Buffer objects as JSON (which breaks binary bodies).
+				async uploadFile({ src, dest, user, password }: { src: string, dest: string, user: string, password: string }) {
+					const content = readFileSync(src)
+					const credentials = Buffer.from(`${user}:${password}`).toString('base64')
+					const url = `http://localhost:${SCREENSHOT_PORT}/remote.php/dav/files/${user}/${dest}`
+					const res = await fetch(url, {
+						method: 'PUT',
+						headers: { Authorization: `Basic ${credentials}` },
+						body: content,
+					})
+					return res.status
+				},
+
+				async mkdavCol({ dest, user, password }: { dest: string, user: string, password: string }) {
+					const credentials = Buffer.from(`${user}:${password}`).toString('base64')
+					const url = `http://localhost:${SCREENSHOT_PORT}/remote.php/dav/files/${user}/${dest}`
+					const res = await fetch(url, {
+						method: 'MKCOL',
+						headers: { Authorization: `Basic ${credentials}` },
+					})
+					return res.status
+				},
 			})
 
 			on('after:run', () => {
