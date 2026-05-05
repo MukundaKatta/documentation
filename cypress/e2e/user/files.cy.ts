@@ -100,9 +100,8 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 
 	it('Files — breadcrumbs inside a folder (files_page-6)', () => {
 		cy.visit('/apps/files/files?dir=/Documents')
-		cy.get('[data-cy-files-content]').should('be.visible')
-		cy.get('.files-list__header').should('be.visible')
-		docScreenshot('user/files_page-6')
+		cy.get('[data-cy-files-content-breadcrumbs]').should('be.visible')
+		docElementScreenshot('[data-cy-files-content-breadcrumbs]', 'user/files_page-6')
 	})
 
 	it('Files — search / filter (files_page-7)', () => {
