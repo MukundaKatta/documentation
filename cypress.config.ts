@@ -24,9 +24,15 @@ function occ(cmd: string, env: Record<string, string> = {}): string {
 
 const SCREENSHOT_APPS = [
 	'activity',
+	'calendar',
+	'circles',
 	'comments',
+	'deck',
 	'files_versions',
+	'notes',
 	'notifications',
+	'photos',
+	'tasks',
 	'viewer',
 ]
 

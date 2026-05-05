@@ -10,6 +10,9 @@ const AVATAR_DIR = '/home/anna/Downloads/tp/avatar'
 before(() => {
 	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
 	cy.task('uploadAvatar', { src: `${AVATAR_DIR}/christine/avatar.png`, user: 'christine', password: 'christine' })
+	// Enable dashboard widgets matching the tech-preview layout (mail/spreed omitted — not in server image)
+	cy.task('occ', { cmd: 'user:setting christine dashboard layout files-favorites,calendar,deck,notes,tasks,photos-onthisday,circles' })
+	cy.task('occ', { cmd: 'user:setting christine dashboard firstRun 0' })
 })
 
 describe('Web interface', () => {
@@ -23,9 +26,9 @@ describe('Web interface', () => {
 	it('Dashboard', () => {
 		cy.login(user)
 		cy.visit('/apps/dashboard')
-		// Wait for widgets to load
-		cy.get('.dashboard-widget, #app-content, .app-dashboard').should('be.visible')
-		cy.get('.loading, .icon-loading').should('not.exist')
+		// Wait for at least one widget to appear and spinners to clear
+		cy.get('.panel--header, .dashboard-widget-content', { timeout: 15000 }).should('be.visible')
+		cy.get('.icon-loading', { timeout: 15000 }).should('not.exist')
 		docScreenshot('user/webinterface_dashboard')
 	})
 
