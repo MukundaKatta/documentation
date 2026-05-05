@@ -45,10 +45,13 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	before(() => {
 		provisionUser()
 		provisionFiles()
+		// baseUrl includes /index.php — strip it to reach the OCS API root
+		const ocsShares = (Cypress.config('baseUrl') as string).replace('/index.php', '')
+			+ '/ocs/v2.php/apps/files_sharing/api/v1/shares'
 		// Share Documents folder with admin (user share → shows Shared badge)
 		cy.request({
 			method: 'POST',
-			url: '/ocs/v2.php/apps/files_sharing/api/v1/shares',
+			url: ocsShares,
 			auth: { user: 'christine', pass: 'christine' },
 			headers: { 'OCS-APIRequest': 'true' },
 			body: { path: '/Documents', shareType: 0, shareWith: 'admin' },
@@ -57,7 +60,7 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 		// Share Ocean sunset.jpg via public link (shareType 3 → shows chain-link icon)
 		cy.request({
 			method: 'POST',
-			url: '/ocs/v2.php/apps/files_sharing/api/v1/shares',
+			url: ocsShares,
 			auth: { user: 'christine', pass: 'christine' },
 			headers: { 'OCS-APIRequest': 'true' },
 			body: { path: '/Ocean sunset.jpg', shareType: 3 },
