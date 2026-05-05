@@ -6,8 +6,11 @@ import { docScreenshot, docElementScreenshot } from '../helpers'
 
 const user = new User('christine', 'christine')
 
+const AVATAR_DIR = '/home/anna/Downloads/tp/avatar'
+
 function provisionUser() {
 	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
+	cy.task('uploadAvatar', { src: `${AVATAR_DIR}/christine/avatar.png`, user: 'christine', password: 'christine' })
 }
 
 const WALLPAPERS = '/home/anna/Downloads/wallpapers'

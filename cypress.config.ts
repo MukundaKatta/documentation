@@ -89,6 +89,27 @@ export default defineConfig({
 					})
 					return res.status
 				},
+
+				async uploadAvatar({ src, user, password }: { src: string, user: string, password: string }) {
+					const content = readFileSync(src)
+					const credentials = Buffer.from(`${user}:${password}`).toString('base64')
+					const boundary = `----AvatarBoundary${Date.now()}`
+					const body = Buffer.concat([
+						Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="files[]"; filename="avatar.png"\r\nContent-Type: image/png\r\n\r\n`),
+						content,
+						Buffer.from(`\r\n--${boundary}--\r\n`),
+					])
+					const res = await fetch(`http://localhost:${SCREENSHOT_PORT}/index.php/avatar`, {
+						method: 'POST',
+						headers: {
+							Authorization: `Basic ${credentials}`,
+							'Content-Type': `multipart/form-data; boundary=${boundary}`,
+							'OCS-APIREQUEST': 'true',
+						},
+						body,
+					})
+					return res.status
+				},
 			})
 
 			on('after:run', async () => {
