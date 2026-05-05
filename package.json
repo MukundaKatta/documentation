@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "screenshots": "cypress run --e2e",
+    "screenshots": "cypress run --e2e --browser chromium",
     "screenshots:open": "cypress open --e2e",
     "inventory": "python3 scripts/inventory.py"
   },

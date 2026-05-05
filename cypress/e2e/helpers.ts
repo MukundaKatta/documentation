@@ -10,12 +10,16 @@
  * The sync script (scripts/sync.sh) reads screenshot-inventory.json to map
  * these names to their RST image directive targets.
  */
-/** Inject CSS to strip focus outlines before capturing. */
+/** Inject CSS to strip focus outlines and scrollbars before capturing. */
 function suppressFocusRings(): void {
 	cy.document().then((doc) => {
 		const style = doc.createElement('style')
 		style.setAttribute('data-doc-screenshot', '')
-		style.textContent = '*:focus, *:focus-visible { outline: none !important; }'
+		style.textContent = [
+			'*:focus, *:focus-visible { outline: none !important; }',
+			'::-webkit-scrollbar { display: none !important; }',
+			'* { scrollbar-width: none !important; }',
+		].join('\n')
 		doc.head.appendChild(style)
 	})
 }

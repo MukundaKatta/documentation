@@ -57,6 +57,10 @@ export default defineConfig({
 			on('before:browser:launch', (browser, launchOptions) => {
 				if (browser.family === 'chromium' && browser.name !== 'electron') {
 					launchOptions.preferences.default['browser.enable_spellchecking'] = false
+					// Force the window to the configured viewport size.
+					// Headless Chromium ignores viewportWidth/Height from config unless
+					// --window-size is passed explicitly.
+					launchOptions.args.push('--window-size=1440,987')
 					return launchOptions
 				}
 				if (browser.family === 'firefox') {
