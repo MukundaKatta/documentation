@@ -35,6 +35,9 @@ function provisionFiles() {
 	// PDFs
 	upload(`${FIXTURES_PDFS}/Q2 Project Proposal.pdf`, 'Q2 Project Proposal.pdf',           d('2026-04-14'))
 	upload(`${FIXTURES_PDFS}/Team Meeting Notes.pdf`,   'Documents/Team Meeting Notes.pdf',  d('2026-04-28'))
+
+	// Upload Q2 proposal a second time to create a version (needed for the Versions tab in the sidebar screenshot)
+	upload(`${FIXTURES_PDFS}/Q2 Project Proposal.pdf`, 'Q2 Project Proposal.pdf',           d('2026-04-28'))
 }
 
 describe('Documentation screenshots — Files', { testIsolation: false }, () => {
@@ -83,8 +86,8 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	it('Files — details sidebar (files_page-4)', () => {
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
-		// Open Actions menu for first file, then click Details
-		cy.get('[data-cy-files-list-row]').first()
+		// Open the Q2 proposal — it has a version, so the Versions tab will be populated
+		cy.get('[data-cy-files-list-row][data-cy-files-list-row-name="Q2 Project Proposal.pdf"]')
 			.find('button[aria-label="Actions"]').click({ force: true })
 		cy.get('[data-cy-files-list-row-action="details"]').first()
 			.click()
