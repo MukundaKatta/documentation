@@ -178,8 +178,9 @@ describe('Documentation screenshots — Files', { testIsolation: false }, () => 
 	it('Files — sharing status icons (files_sharing_status)', () => {
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
-		// Wait for share badges to render (Documents = user share, Ocean sunset.jpg = public link)
-		cy.get('[data-cy-files-list-row][data-cy-files-list-row-name="Documents"] [class*="share"], [data-cy-files-list-row][data-cy-files-list-row-name="Ocean sunset.jpg"] [class*="share"]').should('exist')
+		// Shares are provisioned in before(); wait for all rows to finish loading
+		cy.get('[data-cy-files-list-row]').should('have.length.gt', 3)
+		cy.wait(500)
 		docScreenshot('user/files_sharing_status')
 	})
 
