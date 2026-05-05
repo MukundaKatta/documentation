@@ -4,26 +4,40 @@
 import { User } from '@nextcloud/cypress'
 import { docScreenshot, docElementScreenshot } from '../helpers'
 
-// Use the default admin user from the CI container
-const admin = new User('admin', 'admin')
+const user = new User('christine', 'christine')
+const userAuth = { user: 'christine', pass: 'christine' }
+
+function provisionUser() {
+	cy.task('occ', { cmd: 'user:add --password-from-env --display-name="Christine" christine', env: { OC_PASS: 'christine' } })
+}
+
+function provisionFiles() {
+	const base = '/remote.php/dav/files/christine'
+	const mkdir = (p: string) => cy.request({ method: 'MKCOL', url: `${base}/${p}`, auth: userAuth, failOnStatusCode: false })
+	const touch = (p: string) => cy.request({ method: 'PUT', url: `${base}/${p}`, auth: userAuth, body: '', failOnStatusCode: false })
+
+	mkdir('Documents')
+	mkdir('Photos')
+	touch('Company letter template.docx')
+	touch('Documents/Meeting notes.md')
+	touch('Example Spreadsheet.ods')
+	touch('Landscape.jpeg')
+	touch('Nextcloud Manual.pdf')
+	touch('Readme.md')
+}
 
 describe('Documentation screenshots — Files', { testIsolation: false }, () => {
 
 	before(() => {
-		cy.login(admin)
-		// Create a Documents folder so the breadcrumb screenshot has something to show
-		cy.request({
-			method: 'MKCOL',
-			url: '/remote.php/dav/files/admin/Documents',
-			auth: { user: 'admin', pass: 'admin' },
-			failOnStatusCode: false, // 405 if it already exists — that's fine
-		})
+		provisionUser()
+		provisionFiles()
+		cy.login(user)
 		cy.visit('/apps/files')
 		cy.get('[data-cy-files-list]').should('be.visible')
 	})
 
 	beforeEach(() => {
-		cy.login(admin)
+		cy.login(user)
 	})
 
 	// -------------------------------------------------------------------------
