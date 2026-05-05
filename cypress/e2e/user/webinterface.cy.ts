@@ -51,6 +51,16 @@ describe('Web interface', () => {
 		docElementScreenshot('button:contains("Customize")', 'user/webinterface_customize_btn')
 	})
 
+	it('Unified search', () => {
+		cy.login(user)
+		cy.visit('/apps/dashboard')
+		cy.get('header#header').should('be.visible')
+		cy.get('#unified-search').click()
+		// Wait for the modal and its filter chips to appear
+		cy.get('[data-cy-unified-search-filters]', { timeout: 10000 }).should('be.visible')
+		docScreenshot('user/webinterface_search')
+	})
+
 	it('Profile menu', () => {
 		cy.login(user)
 		cy.visit('/apps/dashboard')
