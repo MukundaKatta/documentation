@@ -43,6 +43,14 @@ describe('Web interface', () => {
 		docElementScreenshot('header#header', 'user/webinterface_nav')
 	})
 
+	it('Customize button', () => {
+		cy.login(user)
+		cy.visit('/apps/dashboard')
+		cy.contains('button', 'Customize', { timeout: 15000 }).should('exist').scrollIntoView()
+		cy.contains('button', 'Customize').should('be.visible')
+		docElementScreenshot('button:contains("Customize")', 'user/webinterface_customize_btn')
+	})
+
 	it('Profile menu', () => {
 		cy.login(user)
 		cy.visit('/apps/dashboard')
