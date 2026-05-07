@@ -20,6 +20,12 @@ New deprecations
 
 .. todo:: This page needs a section for every new deprecation.
 
+Application management
+^^^^^^^^^^^^^^^^^^^^^^
+
+- ``\OCP\AppFramework\App::buildAppNamespace`` is deprecated in favor of non-static method ``\OCP\App\IAppManager::getAppNamespace``
+
+
 Older deprecations
 ------------------
 
